@@ -45,11 +45,15 @@
         <button type="button" class="btn btn-default btn-lg" ng-hide="vm.state === 'finished'" ng-click="vm.replay()"><i class="fa fa-repeat"></i></button>
       </form>
     </div>
-    <div class="col-md-6">
-      <div class="jumbotron" ng-hide="vm.state === 'guessing'">
-        <h2 ng-if="vm.state === 'errored'">:( Упси, попробуй еще раз.</h2>
-        <h2 ng-if="vm.state === 'finished'">:)</h2>
+    <div class="col-md-6 text-center" ng-if="vm.state !== 'guessing'">
+      <div class="jumbotron">
+        <h2>
+          <span ng-if="vm.state === 'errored'">:( Упси, попробуй еще раз.</span>
+          <span ng-if="vm.state === 'finished'">:)</span>
+        </h2>
       </div>
+      <img ng-src="{{vm.hero}}" class="animated pulse" width="40%" alt="" ng-if="vm.state === 'finished'">
     </div>
+    <p>Решено {{vm.user.solvedQuestions.length}} из 20 вопросов</p>
   </div>
 </div>

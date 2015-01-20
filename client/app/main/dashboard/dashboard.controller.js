@@ -5,35 +5,42 @@
     .module('wisdimoApp')
     .controller('DashboardCtrl', DashboardCtrl);
 
-  function DashboardCtrl() {
-    //var vm = this;
+  function DashboardCtrl(Utils, Users) {
+    var vm = this;
+
+    vm.user = Users.me();
 
     activate();
 
     ////////////////////////////////
+    
     function activate() {
-      
+      vm.hero = getHero();
     }
 
-    // $http.get('/api/things').success(function(awesomeThings) {
-    //   $scope.awesomeThings = awesomeThings;
-    //   socket.syncUpdates('thing', $scope.awesomeThings);
-    // });
+    function getHero() {
+      var images = [
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-ultimate.svg',
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-seed.svg',
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-seedling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-sapling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-tree.svg',
+        'https://www.khanacademy.org/images/avatars/svg/piceratops-seed.svg',
+        'https://www.khanacademy.org/images/avatars/svg/piceratops-seedling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/piceratops-sapling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/leafers-seed.svg',
+        'https://www.khanacademy.org/images/avatars/svg/leafers-seedling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/leafers-sapling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/spunky-sam.svg',
+        'https://www.khanacademy.org/images/avatars/svg/marcimus.svg',
+        'https://www.khanacademy.org/images/avatars/svg/mr-pink.svg',
+        'https://www.khanacademy.org/images/avatars/svg/orange-juice-squid.svg',
+        'https://www.khanacademy.org/images/avatars/svg/purple-pi.svg',
+        'https://www.khanacademy.org/images/avatars/svg/mr-pants.svg',
+        'https://www.khanacademy.org/images/avatars/svg/old-spice-man.svg'
+      ];
 
-    // $scope.addThing = function() {
-    //   if($scope.newThing === '') {
-    //     return;
-    //   }
-    //   $http.post('/api/things', { name: $scope.newThing });
-    //   $scope.newThing = '';
-    // };
-
-    // $scope.deleteThing = function(thing) {
-    //   $http.delete('/api/things/' + thing._id);
-    // };
-
-    // $scope.$on('$destroy', function () {
-    //   socket.unsyncUpdates('thing');
-    // });
+      return images[Utils.random(0, images.length)];
+    }
   }  
 })();

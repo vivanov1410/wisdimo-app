@@ -3,9 +3,9 @@
 
   angular
     .module('wisdimoApp')
-    .controller('QuestionCtrl', QuestionCtrl);
+    .controller('QuestionsCtrl', QuestionsCtrl);
 
-  function QuestionCtrl($scope, $timeout, $location, Questions, question) {
+  function QuestionsCtrl($scope, $timeout, $location, $state, Questions, Users, question) {
     var vm = this;
     var audio = new Audio(question.audio);
     var successes = [document.getElementById('audioSuccess1'), document.getElementById('audioSuccess2')];
@@ -20,10 +20,19 @@
     vm.state = 'guessing';
     vm.items = [{ title: 'popa' }];
     vm.droppedItems = [];
+    vm.user = Users.me();
 
     $scope.$watch('vm.answer', function () {
       if(vm.state !== 'finished') {
         vm.state = 'guessing';
+      }
+    });
+
+    $scope.$watch('vm.state', function (current) {
+      if(current && current === 'finished') {
+        vm.user.solvedQuestions.push(question.id);
+        vm.user.state = 'playing';
+        Users.save(vm.user);
       }
     });
 
@@ -32,6 +41,7 @@
     ////////////////////////////////
     
     function activate() {
+      vm.hero = getHero();
       playQuestionSound();
     }
 
@@ -71,11 +81,11 @@
     }
 
     function next() {
-      var nextQuestionId = parseInt(vm.question.id) + 1;
-      if(nextQuestionId <= Questions.count()) {
-        $location.url('questions/' + nextQuestionId);
-      } else {
+      if(Users.finished(vm.user)) {
+        Users.reset();
         $location.url('dashboard');
+      } else {
+        $state.reload();
       }
     }
 
@@ -103,6 +113,31 @@
 
     function refund() {
       vm.items = [{ title: 'popa' }];
+    }
+
+    function getHero() {
+      var images = [
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-ultimate.svg',
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-seed.svg',
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-seedling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-sapling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/aqualine-tree.svg',
+        'https://www.khanacademy.org/images/avatars/svg/piceratops-seed.svg',
+        'https://www.khanacademy.org/images/avatars/svg/piceratops-seedling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/piceratops-sapling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/leafers-seed.svg',
+        'https://www.khanacademy.org/images/avatars/svg/leafers-seedling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/leafers-sapling.svg',
+        'https://www.khanacademy.org/images/avatars/svg/spunky-sam.svg',
+        'https://www.khanacademy.org/images/avatars/svg/marcimus.svg',
+        'https://www.khanacademy.org/images/avatars/svg/mr-pink.svg',
+        'https://www.khanacademy.org/images/avatars/svg/orange-juice-squid.svg',
+        'https://www.khanacademy.org/images/avatars/svg/purple-pi.svg',
+        'https://www.khanacademy.org/images/avatars/svg/mr-pants.svg',
+        'https://www.khanacademy.org/images/avatars/svg/old-spice-man.svg'
+      ];
+
+      return images[random(0, images.length)];
     }
 
     function random(min, max) {

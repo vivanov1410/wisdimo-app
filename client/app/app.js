@@ -7,13 +7,16 @@ angular.module('wisdimoApp', [
   'btford.socket-io',
   'ui.router',
   'ui.bootstrap',
-  'ngDragDrop'
+  'ngDragDrop',
+  'LocalStorageModule'
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, localStorageServiceProvider) {
     $urlRouterProvider.otherwise('/dashboard');
 
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
+
+    localStorageServiceProvider.setPrefix('wisdimo');
   })
 
   .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {

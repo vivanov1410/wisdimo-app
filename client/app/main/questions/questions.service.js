@@ -5,7 +5,7 @@
     .module('wisdimoApp')
     .factory('Questions', Questions);
 
-  function Questions($q) {
+  function Questions($q, Utils, Users) {
     var database = [
       {
         id: 1,
@@ -271,7 +271,7 @@
         answerType: 'multipleChoice',
         text: 'В какой из коробок находятся 15 Черепашек?',
         answer: '15',
-        //audio: 'https://dl.dropboxusercontent.com/u/30510060/exilium-studio/wisdimo/18.mp3',
+        audio: 'https://dl.dropboxusercontent.com/u/30510060/exilium-studio/wisdimo/19.mp3',
         variants: [
           {
             value: 'low',
@@ -292,7 +292,7 @@
         answerType: 'multipleChoice',
         text: 'В какой из коробок находятся 2 Орешка?',
         answer: '2',
-        //audio: 'https://dl.dropboxusercontent.com/u/30510060/exilium-studio/wisdimo/18.mp3',
+        audio: 'https://dl.dropboxusercontent.com/u/30510060/exilium-studio/wisdimo/20.mp3',
         variants: [
           {
             value: '2',
@@ -312,6 +312,7 @@
 
     var service = {
       find: find,
+      random: random,
       count: count
     };
 
@@ -323,6 +324,24 @@
       var deferred = $q.defer();
       
       var found = _.find(database, { id: parseInt(id, 10) });
+      if(found) {
+        deferred.resolve(found);
+      } else {
+        deferred.reject();
+      }
+
+      return deferred.promise;
+    }
+
+    function random() {
+      var deferred = $q.defer();
+      
+      var user = Users.me();
+      var questions = _.filter(database, function (question) {
+        return !_.contains(user.solvedQuestions, question.id); 
+      });
+
+      var found = _.sample(questions);
       if(found) {
         deferred.resolve(found);
       } else {

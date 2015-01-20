@@ -17,14 +17,14 @@
           controller: 'DashboardCtrl',
           controllerAs: 'vm'
         })
-        .state('main.question', {
-          url: '/questions/:id',
-          templateUrl: 'app/main/questions/question/question.html',
-          controller: 'QuestionCtrl',
+        .state('main.questions', {
+          url: '/questions',
+          templateUrl: 'app/main/questions/questions.html',
+          controller: 'QuestionsCtrl',
           controllerAs: 'vm',
           resolve: {
-            question: ['$stateParams', 'Questions', function ($stateParams, Questions) {
-              return Questions.find($stateParams.id);
+            question: ['Questions', function (Questions) {
+              return Questions.random();
             }]
           }
         });
