@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="row">
+    <h1 class="text-center">{{vm.question.text}}</h1>
+
+    <div class="col-md-6">
+      <form name="form" ng-submit="vm.check(form)">
+        
+        <!-- Multiple Choice -->
+        <div ng-if="vm.question.answerType === 'multipleChoice'">
+          <div class="form-group">
+            <img ng-src="{{vm.question.image}}" alt="">
+          </div>
+          <div class="radio" style="display: table;" ng-repeat="variant in vm.question.variants">
+            <label style="display: table-cell; vertical-align: middle">
+              <input type="radio" ng-model="vm.answer" ng-value="variant.value">
+              {{variant.text}}
+            </label>
+            <img style="cursor: pointer;" ng-src="{{variant.image}}" alt="" ng-click="vm.answer = variant.value">
+          </div>
+        </div>
+        
+        <!-- Number -->
+        <div ng-if="vm.question.answerType === 'number'">
+          <div class="form-group">
+            <img ng-src="{{vm.question.image}}" alt="">
+          </div>
+          <div class="form-group">
+            <input type="number" class="form-control input-lg" placeholder="Ответ" ng-model="vm.answer">
+          </div>
+        </div>
+
+        <!-- Drag 'n Drop -->
+        <div ng-if="vm.question.answerType === 'dragdrop'">
+          <div data-drop="true" ng-model="vm.items" jqyoui-droppable="{onDrop: 'vm.refund', multiple: true}">
+            <img ng-src="{{vm.question.image}}" style="display: inline-block;" data-drag="true" data-jqyoui-options="{revert: true}" jqyoui-draggable="{animate:false}">
+          </div>
+
+          <div class="well" data-drop="true" ng-model="vm.droppedItems" jqyoui-droppable="{onDrop: 'vm.onDrop', multiple: true}" style='height:300px; width: 300px'>
+            <img ng-src="{{vm.question.image}}" style="display: inline-block;" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}}, animate:false}" ng-repeat="item in vm.droppedItems" ng-model="vm.droppedItems" ng-show="item.title">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-lg" ng-hide="vm.state === 'finished'">Проверить Ответ</button>
+        <button type="button" class="btn btn-success btn-lg" ng-if="vm.state === 'finished'" ng-click="vm.next()">Следующий Вопрос</button>
+        <button type="button" class="btn btn-default btn-lg" ng-hide="vm.state === 'finished'" ng-click="vm.replay()"><i class="fa fa-repeat"></i></button>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <div class="jumbotron" ng-hide="vm.state === 'guessing'">
+        <h2 ng-if="vm.state === 'errored'">:( Упси, попробуй еще раз.</h2>
+        <h2 ng-if="vm.state === 'finished'">:)</h2>
+      </div>
+    </div>
+  </div>
+</div>
